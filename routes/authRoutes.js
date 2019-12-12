@@ -9,12 +9,16 @@ module.exports = app => {
     })
   ); // Begin authentication chain
 
-  app.get(
-    '/auth/google/callback',
-    passport.authenticate('google'),
-    (req, res) => {
-      // Callback from google to get user's data
-      res.send({ msg: 'authentication success' });
-    }
-  );
+  app.get('/auth/google/callback', passport.authenticate('google'));
+
+  app.get('/api/logout', (req, res) => {
+    // Logout user by destroying session
+    req.logout();
+    res.send(req.user);
+  });
+
+  app.get('/api/current_user', (req, res) => {
+    // Check if user is logged in
+    res.send(req.user);
+  });
 };

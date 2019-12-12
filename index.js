@@ -1,9 +1,38 @@
 const express = require('express');
+const mongoose = require('mongoose');
+const cookieSession = require('cookie-session');
+const passport = require('passport');
+
+const { MONGO_URI, PORT, COOKIE_KEY } = require('./config/keys');
+require('./models/User'); // Model loaded first to be able to use it inside helpers/passport
+require('./helpers/passport');
+
+mongoose.connect(
+  MONGO_URI,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  },
+  err => {
+    if (!err) {
+      console.log(`Connected to "${MONGO_URI}"...`);
+    } else {
+      console.log(`Can not connect to mongodb...`);
+    }
+  }
+);
 
 const app = express();
-const PORT = process.env.PORT || 3001;
 
-require('./helpers/passport');
+// lasts 30 days in milliseconds
+app.use(
+  cookieSession({
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    keys: [COOKIE_KEY]
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get('/', (req, res) => {
   res.send({ msg: 'hello world!' });
