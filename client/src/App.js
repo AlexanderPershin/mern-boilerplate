@@ -15,6 +15,7 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    // Check if user is logged in and write to redux store
     dispatch(fetchUser());
   }, []);
 

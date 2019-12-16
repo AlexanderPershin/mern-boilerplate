@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
+const path = require('path');
 
 const { MONGO_URI, PORT, COOKIE_KEY } = require('./config/keys');
 require('./models/User'); // Model loaded first to be able to use it inside helpers/passport
@@ -43,6 +44,17 @@ app.get('/', (req, res) => {
 
 // Authentication routes
 require('./routes/authRoutes')(app);
+
+// Set app behaviour for production mode
+// Heroku sets NODE_ENV to production automatically
+if (process.env.NODE_ENV === 'production') {
+  // Serve js and css
+  app.use(express.static(path.join(__dirname, 'client', 'build')));
+  // Send index.html for all unregisteret api routes
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  });
+}
 
 app.listen(PORT, () => {
   console.log(`Server is up on "http://localhost:${PORT}"...`);
