@@ -38,10 +38,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get('/', (req, res) => {
-  res.send({ msg: 'hello world!' });
-});
-
 // Authentication routes
 require('./routes/authRoutes')(app);
 
