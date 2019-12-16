@@ -1,0 +1,30 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid black;
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  .menu {
+    flex: 1 1 10rem;
+    .menu__list {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      list-style: none;
+      .menu__item:not(:last-child) {
+        margin-right: 3rem;
+      }
+      .menu__item {
+        &:hover {
+          background-color: lighten($app-bg, 10%);
+        }
+      }
+      .-active {
+        text-decoration: underline;
+      }
+    }
+  }
+}

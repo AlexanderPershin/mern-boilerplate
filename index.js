@@ -24,6 +24,9 @@ mongoose.connect(
 
 const app = express();
 
+// Parsing req.body json or URL-encoded
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 // lasts 30 days in milliseconds
 app.use(
   cookieSession({
