@@ -37,6 +37,8 @@ passport.use(
       if (!cowboyInside) {
         // No user with such id - create new record
         const cowboyEntersSaloon = new User({
+          username: profile.displayName,
+          avatar: profile.photos[0].value,
           googleId: profile.id
         });
         await cowboyEntersSaloon.save();

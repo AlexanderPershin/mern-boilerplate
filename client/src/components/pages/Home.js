@@ -1,19 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector, connect } from 'react-redux';
+import { fetchArticles } from '../../actions/index';
+
+import ArticleList from '../parts/ArticleList';
 
 const Home = () => {
+  const articles = useSelector(state => state.articles);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchArticles(0, 5));
+  }, []);
+
   return (
     <div className='home'>
       <h1>Wellcome to our website</h1>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Labore quidem
-        architecto exercitationem eligendi accusamus officia a, deserunt nulla
-        molestiae assumenda ad magni ipsum veniam minima optio nam incidunt,
-        iure cum adipisci modi corporis blanditiis quas? Atque necessitatibus
-        perspiciatis quibusdam consequuntur? Doloribus deserunt delectus culpa
-        deleniti, dolores ab adipisci tempore. Praesentium!
-      </p>
+      <h2>Latest articles:</h2>
+      <ArticleList articles={articles} />
     </div>
   );
 };
 
-export default Home;
+export default connect()(Home);

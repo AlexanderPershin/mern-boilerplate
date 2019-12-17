@@ -1,1 +1,4 @@
 export const FETCH_USER = 'FETCH_USER';
+export const FETCH_ARTICLES = 'FETCH_ARTICLES';
+export const FETCH_ARTICLE = 'FETCH_ARTICLE';
+export const CLEAR_ARTICLE = 'CLEAR_ARTICLE';

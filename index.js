@@ -5,7 +5,10 @@ const passport = require('passport');
 const path = require('path');
 
 const { MONGO_URI, PORT, COOKIE_KEY } = require('./config/keys');
+
 require('./models/User'); // Model loaded first to be able to use it inside helpers/passport
+require('./models/Ariticle');
+
 require('./helpers/passport');
 
 mongoose.connect(
@@ -40,6 +43,8 @@ app.use(passport.session());
 
 // Authentication routes
 require('./routes/authRoutes')(app);
+// Articles routes
+require('./routes/articlesRoutes')(app);
 
 // Set app behaviour for production mode
 // Heroku sets NODE_ENV to production automatically
