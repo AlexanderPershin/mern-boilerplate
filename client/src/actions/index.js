@@ -2,6 +2,7 @@ import axios from 'axios';
 import {
   FETCH_USER,
   FETCH_ARTICLES,
+  FETCH_CURRENT_ARTICLES,
   FETCH_ARTICLE,
   CLEAR_ARTICLE
 } from './types';
@@ -15,14 +16,30 @@ export const fetchUser = () => async dispatch => {
   }
 };
 
-export const fetchArticles = (skip, amount) => async dispatch => {
-  // '/api/articles/:skip/:amount'
-  const result = await axios.get(`/api/articles/${skip}/${amount}`);
+export const fetchArticles = (skip, amount, sort = -1) => async dispatch => {
+  // '/api/articles/:skip/:amount/:sort'
+  const result = await axios.get(`/api/articles/${skip}/${amount}/${sort}`);
 
   if (result.data.articles.length > 0) {
     dispatch({ type: FETCH_ARTICLES, payload: result.data.articles });
   } else {
     dispatch({ type: FETCH_ARTICLES, payload: [] });
+  }
+};
+
+export const fetchCurrentArticles = (skip, amount, sort) => async dispatch => {
+  // '/api/articles/:skip/:amount/:sort'
+  // sort = -1 - last published articles, sort = 1 - oldest articles
+  const result = await axios.get(
+    `/api/current_articles/${skip}/${amount}/${sort}`
+  );
+
+  console.log('fetch current arts');
+
+  if (result.data.articles.length > 0) {
+    dispatch({ type: FETCH_CURRENT_ARTICLES, payload: result.data.articles });
+  } else {
+    dispatch({ type: FETCH_CURRENT_ARTICLES, payload: [] });
   }
 };
 

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const requireLogin = require('../middlewares/requireLogin');
+const requireOwner = require('../middlewares/requireOwner');
 
 const User = mongoose.model('users');
 const Article = mongoose.model('articles');
@@ -10,15 +11,18 @@ module.exports = app => {
   // Get all current user's articles (only titles and bodies)
   // To display the list
   app.get(
-    '/api/current_articles/:skip/:amount',
+    '/api/current_articles/:skip/:amount/:sort',
     requireLogin,
     async (req, res) => {
-      const { skip, amount } = req.params;
+      const { skip, amount, sort } = req.params;
 
       const art = await Article.find(
         { _user: req.user.id },
         'title body authorName',
         {
+          sort: {
+            createdAt: Number(sort)
+          },
           skip: Number(skip),
           limit: Number(amount)
         }
@@ -29,12 +33,12 @@ module.exports = app => {
   );
 
   // Get ALL articles (only titles and bodies)
-  app.get('/api/articles/:skip/:amount', async (req, res) => {
-    const { skip, amount } = req.params;
+  app.get('/api/articles/:skip/:amount/:sort', async (req, res) => {
+    const { skip, amount, sort } = req.params;
 
     const art = await Article.find({}, 'title body authorName', {
       sort: {
-        createdAt: -1
+        createdAt: Number(sort)
       },
       skip: Number(skip),
       limit: Number(amount)
@@ -68,6 +72,10 @@ module.exports = app => {
     } else {
       res.send({ msg: `Error posting Article: ${title}` });
     }
+  });
+
+  app.post('/api/articles/edit', requireLogin, (req, res) => {
+    console.log(req.body);
   });
 
   // Like article with id

@@ -1,9 +1,26 @@
 // Colors
 // Backgrounds
-$app-bg: steelblue;
-// Fonts
+$app-bg: #92b9bd;
+$headerFooter-bg: #967d69;
+$item-bg: #a8d4ad;
+// Font Colors
 $app-c: rgba(255, 255, 255, 0.9);
+$app-c-dark: rgba(50, 50, 50, 0.8);
+$heading-c: rgba(243, 247, 158, 0.9);
+$link-c: #e8ec67;
+$sh-c: rgba(0, 0, 0, 0.5);
 
 // Sizes
+$app-w: 120rem;
 $header_height: 5rem;
 $footer_height: 5rem;
+
+// Shadow
+$sh: 0 1rem 1rem 0 $sh-c;
+
+// Border
+$br: 0.5rem solid darken($headerFooter-bg, 15%);
+
+// Paddings
+$pd-s: 2rem;
+$pd-v: 3rem;

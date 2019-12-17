@@ -1,0 +1,10 @@
+.content {
+  > div {
+    // This is pages home/about/contact etc
+    padding: $pd-v $pd-s;
+    > h1,
+    h2 {
+      text-align: center;
+    }
+  }
+}

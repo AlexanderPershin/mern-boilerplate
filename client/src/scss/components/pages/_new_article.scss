@@ -1,0 +1,31 @@
+.newArticle {
+  .articleForm {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    flex-direction: column;
+    max-width: 50rem;
+    margin: 2rem auto;
+    font-size: 2rem;
+    background-color: $item-bg;
+    padding: 2rem;
+    box-shadow: $sh;
+    > *:not(:last-child) {
+      margin-bottom: 1rem;
+    }
+    > input[type='text'],
+    > textarea,
+    > button {
+      font-size: 2rem;
+      padding: 1rem;
+      color: $app-c-dark;
+    }
+    > button {
+      border: none;
+      background-color: $headerFooter-bg;
+      color: $link-c;
+      font-weight: 100;
+      cursor: pointer;
+    }
+  }
+}

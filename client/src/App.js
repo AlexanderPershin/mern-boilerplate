@@ -11,6 +11,7 @@ import About from './components/pages/About';
 import Contact from './components/pages/Contact';
 import Dashboard from './components/pages/Dashboard';
 import Article from './components/pages/Article';
+import NewArticle from './components/pages/NewArticle';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -29,7 +30,8 @@ const App = () => {
             <Route exact path='/about' component={About} />
             <Route exact path='/contact' component={Contact} />
             <Route exact path='/dashboard' component={Dashboard} />
-            <Route path='/article/:id' component={Article} />
+            <Route exact path='/article/:id' component={Article} />
+            <Route exact path='/create' component={NewArticle} />
           </Switch>
         </Layout>
       </div>

@@ -7,11 +7,43 @@
   align-items: center;
   justify-items: stretch;
   max-width: 50rem;
-  margin: 0 auto;
+  margin: 5rem auto;
   list-style: none;
   .article__item {
-    &:not(:last-child) {
-      border-bottom: 1px solid gray;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-direction: column;
+    background-color: $item-bg;
+    padding: 3rem;
+    box-shadow: $sh;
+    .article__title {
+      color: $heading-c;
     }
+    .article__body {
+      color: $app-c-dark;
+    }
+    .article__author {
+      align-self: flex-end;
+      color: darken($app-c, 5%);
+    }
+    .article__readmore {
+      align-self: flex-end;
+      text-decoration: none;
+      color: $link-c;
+    }
+
+    &:not(:last-child) {
+      margin-bottom: 3rem;
+    }
+  }
+  .article__loadmore {
+    border: none;
+    background-color: $headerFooter-bg;
+    color: $link-c;
+    font-weight: 100;
+    cursor: pointer;
+    padding: 2rem;
+    text-align: center;
   }
 }
