@@ -32,6 +32,16 @@
       text-decoration: none;
       color: $link-c;
     }
+    .article__edit {
+      align-self: flex-end;
+      text-decoration: none;
+      color: orangered;
+    }
+    .article__delete {
+      align-self: flex-end;
+      text-decoration: none;
+      color: red;
+    }
 
     &:not(:last-child) {
       margin-bottom: 3rem;

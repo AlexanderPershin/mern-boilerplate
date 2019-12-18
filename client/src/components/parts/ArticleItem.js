@@ -1,12 +1,38 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
-const ArticleItem = ({ _id, title, body, authorName }) => {
+import { deleteArticle } from '../../actions/index';
+
+const ArticleItem = ({ _id, title, body, authorName, editable }) => {
   const bodyLength = 350;
+  const dispatch = useDispatch();
 
   const renderBody = () => {
     // Truncate text to 350 characters and add ellipsis
     return `${body.substring(0, bodyLength)}...`;
+  };
+
+  const renderEditLinks = id => {
+    return (
+      <>
+        <Link className='article__edit' to={`/edit/article/${id}`}>
+          Edit &#9998;
+        </Link>
+        <a
+          className='article__delete'
+          onClick={e => handleDeleteArticle(e, id)}
+        >
+          Delete &times;
+        </a>
+      </>
+    );
+  };
+
+  const handleDeleteArticle = async (e, id) => {
+    e.preventDefault();
+
+    dispatch(deleteArticle(id));
   };
 
   return (
@@ -17,6 +43,7 @@ const ArticleItem = ({ _id, title, body, authorName }) => {
       <Link className='article__readmore' to={`/article/${_id}`}>
         Read More &rarr;
       </Link>
+      {editable && renderEditLinks(_id)}
     </li>
   );
 };

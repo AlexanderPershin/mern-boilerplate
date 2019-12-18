@@ -12,6 +12,8 @@ import Contact from './components/pages/Contact';
 import Dashboard from './components/pages/Dashboard';
 import Article from './components/pages/Article';
 import NewArticle from './components/pages/NewArticle';
+import EditArticle from './components/pages/EditArticle';
+import Profile from './components/pages/Profile';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -31,7 +33,9 @@ const App = () => {
             <Route exact path='/contact' component={Contact} />
             <Route exact path='/dashboard' component={Dashboard} />
             <Route exact path='/article/:id' component={Article} />
-            <Route exact path='/create' component={NewArticle} />
+            <Route exact path='/new/article/' component={NewArticle} />
+            <Route exact path='/edit/article/:id' component={EditArticle} />
+            <Route exact path='/profile' component={Profile} />
           </Switch>
         </Layout>
       </div>

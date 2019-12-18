@@ -17,6 +17,8 @@ $footer_height: 5rem;
 
 // Shadow
 $sh: 0 1rem 1rem 0 $sh-c;
+// Text shadow
+$tsh: 0 0.2rem 0.2rem $sh-c;
 
 // Border
 $br: 0.5rem solid darken($headerFooter-bg, 15%);

@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const requireLogin = require('../middlewares/requireLogin');
-const requireOwner = require('../middlewares/requireOwner');
 
 const User = mongoose.model('users');
 const Article = mongoose.model('articles');
@@ -16,9 +15,9 @@ module.exports = app => {
     async (req, res) => {
       const { skip, amount, sort } = req.params;
 
-      const art = await Article.find(
+      const arts = await Article.find(
         { _user: req.user.id },
-        'title body authorName',
+        'title body authorName _user',
         {
           sort: {
             createdAt: Number(sort)
@@ -28,7 +27,7 @@ module.exports = app => {
         }
       );
 
-      res.send({ articles: art });
+      res.send({ articles: arts });
     }
   );
 
@@ -68,14 +67,46 @@ module.exports = app => {
     }).save();
 
     if (newArticle) {
-      res.send({ msg: `You posted Article: ${title}` });
+      res.send({ success: true, msg: `You posted Article: ${title}` });
     } else {
-      res.send({ msg: `Error posting Article: ${title}` });
+      res.send({ success: false, msg: `Error posting Article: ${title}` });
     }
   });
 
-  app.post('/api/articles/edit', requireLogin, (req, res) => {
-    console.log(req.body);
+  // Edit article
+  app.post('/api/articles/edit/:id', requireLogin, async (req, res) => {
+    const { id } = req.params;
+    const { user } = req;
+    const { title, body } = req.body;
+
+    const art = await Article.findById(id);
+
+    let result = false;
+    if (req.user._id === art._user) {
+      art.title = title;
+      art.body = body;
+
+      result = await art.save();
+    }
+
+    if (result) {
+      res.send({ msg: `You edited Article: ${title}` });
+    } else {
+      res.send({ msg: `Error editing Article: ${title}` });
+    }
+  });
+
+  // Delete article
+  app.post('/api/articles/delete/:id', requireLogin, async (req, res) => {
+    const { id } = req.params;
+
+    const art = await Article.deleteOne({ _user: req.user.id, _id: id });
+
+    if (art) {
+      res.send({ msg: `You deleted Article` });
+    } else {
+      res.send({ msg: `Error deleting Article` });
+    }
   });
 
   // Like article with id

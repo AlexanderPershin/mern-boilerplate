@@ -1,2 +1,25 @@
 .dashboard {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  .dashboard__actions {
+    list-style: none;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    .dashboard__action {
+      > a {
+        text-decoration: none;
+        color: inherit;
+        text-shadow: $tsh;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+    .dashboard__action:not(:last-child) {
+      margin-right: 2rem;
+    }
+  }
 }

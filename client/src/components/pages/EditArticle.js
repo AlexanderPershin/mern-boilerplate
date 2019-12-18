@@ -1,15 +1,34 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { newArticle } from '../../actions/index';
-import { useHistory } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useHistory } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchArticle, clearArticle } from '../../actions/index';
 import axios from 'axios';
 
-const NewArticle = () => {
+const EditArticle = () => {
+  let { id } = useParams();
+  let history = useHistory();
+
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
 
   const dispatch = useDispatch();
-  const history = useHistory();
+  const article = useSelector(state => state.article);
+
+  useEffect(() => {
+    dispatch(fetchArticle(id));
+
+    return () => {
+      // Clear page from prev info
+      dispatch(clearArticle());
+    };
+  }, [id]);
+
+  useEffect(() => {
+    if (article && article.title && article.body) {
+      setTitle(article.title);
+      setBody(article.body);
+    }
+  }, [article]);
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -18,15 +37,12 @@ const NewArticle = () => {
       alert('You must enter title and body of your article!');
       return;
     } else {
-      const createdArticle = {
+      const newArticle = {
         title,
         body
       };
 
-      setTitle('');
-      setBody('');
-
-      dispatch(newArticle(createdArticle));
+      const result = await axios.post(`/api/articles/edit/${id}`, newArticle);
 
       history.push('/dashboard');
     }
@@ -42,7 +58,7 @@ const NewArticle = () => {
 
   return (
     <div className='newArticle'>
-      <h2>Create New Article</h2>
+      <h2>Edit Article</h2>
       <form className='articleForm' onSubmit={handleSubmit}>
         <input
           placeholder='Enter article title'
@@ -59,10 +75,10 @@ const NewArticle = () => {
           value={body}
           onChange={handleBody}
         ></textarea>
-        <button type='submit'>Publish Article</button>
+        <button type='submit'>Confirm Changes</button>
       </form>
     </div>
   );
 };
 
-export default NewArticle;
+export default EditArticle;

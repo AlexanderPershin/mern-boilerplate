@@ -11,7 +11,8 @@ const ArticleList = ({
   startingAmount,
   loadmore,
   selector,
-  fetcher
+  fetcher,
+  editable = false
 }) => {
   const list = selector;
 
@@ -36,6 +37,7 @@ const ArticleList = ({
         _id={_id}
         title={title}
         body={body}
+        editable={editable}
         authorName={authorName}
       />
     ));

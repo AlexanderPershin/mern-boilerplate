@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import { useDispatch, useSelector, connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchCurrentArticles } from '../../actions/index';
 
 import ArticleList from '../parts/ArticleList';
@@ -21,12 +21,16 @@ const Dashboard = () => {
       <h1>This is your dashboard</h1>
       <ul className='dashboard__actions'>
         <li className='dashboard__action'>
-          <Link to='/create'>New Article</Link>
+          <Link to='/new/article'>New Article</Link>
+        </li>
+        <li className='dashboard__action'>
+          <Link to='/profile'>Profile</Link>
         </li>
       </ul>
 
       <h2>Your articles:</h2>
       <ArticleList
+        editable={true}
         keyprop='current_articles'
         startingAmount={2}
         loadmore={2}
