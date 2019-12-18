@@ -4,10 +4,15 @@
   justify-content: space-between;
   align-items: center;
   .dashboard__actions {
+    background-color: lighten($headerFooter-bg, 5%);
+    border-top: 0.5rem solid $headerFooter-bg;
+    border-bottom: 0.5rem solid $headerFooter-bg;
     list-style: none;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
+    padding: 2rem;
+    align-self: stretch;
     .dashboard__action {
       > a {
         text-decoration: none;
@@ -19,7 +24,7 @@
       }
     }
     .dashboard__action:not(:last-child) {
-      margin-right: 2rem;
+      margin-right: 5rem;
     }
   }
 }

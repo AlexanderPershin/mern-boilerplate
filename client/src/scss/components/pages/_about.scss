@@ -1,0 +1,9 @@
+.about {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  > p {
+    max-width: 50rem;
+  }
+}

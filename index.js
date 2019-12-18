@@ -41,10 +41,15 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+/*========== ROUTES ==========*/
 // Authentication routes
 require('./routes/authRoutes')(app);
 // Articles routes
 require('./routes/articlesRoutes')(app);
+// Users routes
+require('./routes/usersRoutes')(app);
+// Profiles routes
+require('./routes/profileRoutes')(app);
 
 // Set app behaviour for production mode
 // Heroku sets NODE_ENV to production automatically

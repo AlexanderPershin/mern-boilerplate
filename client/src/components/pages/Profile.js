@@ -7,7 +7,7 @@ const Profile = () => {
   const renderNameAndPhoto = () => {
     if (user) {
       return (
-        <figure>
+        <figure className='userInfo'>
           <img src={user.avatar} />
           <figcaption>{user.username}</figcaption>
         </figure>
@@ -21,7 +21,7 @@ const Profile = () => {
     <div className='profile'>
       <h1>This is your profile</h1>
       {renderNameAndPhoto()}
-      <p>
+      <p className='profile__info'>
         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit nobis ab
         neque asperiores deleniti nostrum mollitia quod, odio in perspiciatis ea
         ut molestiae necessitatibus eligendi eveniet accusantium dolore qui! Eum

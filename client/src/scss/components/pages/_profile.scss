@@ -1,2 +1,30 @@
 .profile {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  .profile__info {
+    max-width: 50rem;
+  }
+  .userInfo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $item-bg;
+    border-radius: 100rem;
+    padding: 1rem;
+    box-shadow: $sh;
+    margin: 2rem 0;
+    img {
+      width: 10rem;
+      height: 10rem;
+      border-radius: 100rem;
+      box-shadow: $sh;
+    }
+    figcaption {
+      padding: 2rem;
+      color: $heading-c;
+      text-shadow: $tsh;
+    }
+  }
 }
