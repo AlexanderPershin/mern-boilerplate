@@ -4,7 +4,15 @@ import { useDispatch } from 'react-redux';
 
 import { deleteArticle } from '../../actions/index';
 
-const ArticleItem = ({ _id, title, body, authorName, editable }) => {
+const ArticleItem = ({
+  _id,
+  title,
+  body,
+  editable,
+  _user,
+
+  ...rest
+}) => {
   const bodyLength = 350;
   const dispatch = useDispatch();
 
@@ -39,7 +47,7 @@ const ArticleItem = ({ _id, title, body, authorName, editable }) => {
     <li className='article__item'>
       <h3 className='article__title'>{title}</h3>
       <p className='article__body'>{renderBody()}</p>
-      <i className='article__author'>--{authorName}</i>
+      <i className='article__author'>--{_user.username}</i>
       <Link className='article__readmore' to={`/article/${_id}`}>
         Read More &rarr;
       </Link>

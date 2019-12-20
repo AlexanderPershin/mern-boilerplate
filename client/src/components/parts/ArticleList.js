@@ -31,14 +31,14 @@ const ArticleList = ({
   };
 
   const renderArticles = () => {
-    return list.map(({ _id, title, body, authorName }) => (
+    return list.map(({ _id, title, body, authorName, _user, ...rest }) => (
       <ArticleItem
         key={_id}
         _id={_id}
+        _user={_user}
         title={title}
         body={body}
         editable={editable}
-        authorName={authorName}
       />
     ));
   };

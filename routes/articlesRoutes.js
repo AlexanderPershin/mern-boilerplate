@@ -25,7 +25,7 @@ module.exports = app => {
           skip: Number(skip),
           limit: Number(amount)
         }
-      );
+      ).populate('_user', ['username', 'avatar']);
 
       res.send({ articles: arts });
     }
@@ -41,7 +41,7 @@ module.exports = app => {
       },
       skip: Number(skip),
       limit: Number(amount)
-    });
+    }).populate('_user', ['username', 'avatar']);
 
     res.send({ articles: art });
   });
@@ -50,7 +50,10 @@ module.exports = app => {
   app.get('/api/article/:id', async (req, res) => {
     const { id } = req.params;
 
-    const art = await Article.findById(id);
+    const art = await Article.findById(id).populate('_user', [
+      'username',
+      'avatar'
+    ]);
 
     res.send({ article: art });
   });
@@ -59,17 +62,20 @@ module.exports = app => {
   app.post('/api/articles', requireLogin, async (req, res) => {
     const { title, body } = req.body;
 
-    const newArticle = await new Article({
-      title,
-      body,
-      _user: req.user.id,
-      authorName: req.user.username
-    }).save();
+    try {
+      const newArticle = await new Article({
+        title,
+        body,
+        _user: req.user.id
+      }).save();
 
-    if (newArticle) {
-      res.send({ success: true, msg: `You posted Article: ${title}` });
-    } else {
-      res.send({ success: false, msg: `Error posting Article: ${title}` });
+      if (newArticle) {
+        res.send({ success: true, msg: `You posted Article: ${title}` });
+      } else {
+        res.send({ success: false, msg: `Error posting Article: ${title}` });
+      }
+    } catch (err) {
+      res.send({ msg: `Server error posting Article: ${title}` });
     }
   });
 
@@ -79,7 +85,10 @@ module.exports = app => {
     const { user } = req;
     const { title, body } = req.body;
 
-    const art = await Article.findById(id);
+    const art = await Article.findById(id).populate('_user', [
+      'username',
+      'avatar'
+    ]);
 
     let result = false;
     if (req.user._id === art._user) {

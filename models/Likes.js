@@ -3,10 +3,13 @@ const mongoose = require('mongoose');
 const { Schema, SchemaTypes } = mongoose;
 
 // Likes system for comments and articles
+// Every instance of like contains user who liked comment of article and _article or _comment link to articles of comments collection. That way there would not be highwatermark overflow
+// Article of Comment model will populate array of likes
 
 const likesSchema = new Schema({
-  id: SchemaTypes.ObjectId,
-  voters: [{ type: SchemaTypes.ObjectId, ref: 'User' }]
+  _article: { type: SchemaTypes.ObjectId, ref: 'articles' },
+  _comment: { type: SchemaTypes.ObjectId, ref: 'comments' },
+  voter: { type: SchemaTypes.ObjectId, ref: 'users' }
 });
 
-module.exports = likesSchema;
+module.exports = mongoose.model('likes', likesSchema);

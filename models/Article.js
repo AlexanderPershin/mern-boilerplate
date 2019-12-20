@@ -2,17 +2,13 @@ const mongoose = require('mongoose');
 
 const { Schema, SchemaTypes } = mongoose;
 
-const commentSchema = require('./Comment');
-const likesSchema = require('./Likes');
-
 const articleSchema = new Schema(
   {
-    title: String,
-    body: String,
-    _user: { type: SchemaTypes.ObjectId, ref: 'User' },
-    authorName: String,
-    comments: [commentSchema],
-    likes: [likesSchema]
+    title: { type: String, required: true },
+    body: { type: String, required: true },
+    _user: { type: SchemaTypes.ObjectId, ref: 'users' },
+    comments: [{ type: SchemaTypes.ObjectId, ref: 'comments' }],
+    likes: [{ type: SchemaTypes.ObjectId, ref: 'likes' }]
   },
   { timestamps: true }
 );
