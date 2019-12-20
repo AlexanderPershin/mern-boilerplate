@@ -8,6 +8,7 @@ const { MONGO_URI, PORT, COOKIE_KEY } = require('./config/keys');
 
 require('./models/User'); // Model loaded first to be able to use it inside helpers/passport
 require('./models/Article');
+require('./models/Profile');
 
 require('./helpers/passport');
 
@@ -15,7 +16,8 @@ mongoose.connect(
   MONGO_URI,
   {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false
   },
   err => {
     if (!err) {

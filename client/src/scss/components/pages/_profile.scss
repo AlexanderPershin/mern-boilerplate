@@ -27,4 +27,34 @@
       text-shadow: $tsh;
     }
   }
+  .profile__form {
+    margin-top: 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-direction: column;
+    width: 50rem;
+    background-color: $item-bg;
+    padding: 1rem;
+    box-shadow: $sh;
+    .profile__field {
+      padding: 1rem;
+      width: 100%;
+      box-shadow: 0 0 0 transparent;
+      border: none;
+      transition: all 0.3s ease-in-out;
+      &:focus {
+        box-shadow: $sh;
+        transform: translateY(-0.2rem);
+      }
+    }
+    .profile__field:not(:last-child) {
+      margin-bottom: 1rem;
+    }
+    > button {
+      padding: 1rem 5rem;
+      cursor: pointer;
+      box-shadow: $sh;
+    }
+  }
 }
