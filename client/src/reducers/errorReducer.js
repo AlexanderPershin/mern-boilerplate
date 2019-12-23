@@ -4,8 +4,10 @@ const initialState = [];
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case NEW_ERROR:
+    case NEW_ERROR: {
+      alert(action.payload.message);
       return [...state, action.payload];
+    }
     case DELETE_ERROR: {
       return state.filter(item => item.errorId !== action.payload.errorId);
     }

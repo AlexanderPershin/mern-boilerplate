@@ -4,15 +4,7 @@ import { useDispatch } from 'react-redux';
 
 import { deleteArticle } from '../../actions/index';
 
-const ArticleItem = ({
-  _id,
-  title,
-  body,
-  editable,
-  _user,
-
-  ...rest
-}) => {
+const ArticleItem = ({ _id, title, body, editable, _user, ...rest }) => {
   const bodyLength = 350;
   const dispatch = useDispatch();
 

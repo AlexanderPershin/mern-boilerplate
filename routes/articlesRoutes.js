@@ -15,19 +15,27 @@ module.exports = app => {
     async (req, res) => {
       const { skip, amount, sort } = req.params;
 
-      const arts = await Article.find(
-        { _user: req.user.id },
-        'title body authorName _user',
-        {
-          sort: {
-            createdAt: Number(sort)
-          },
-          skip: Number(skip),
-          limit: Number(amount)
-        }
-      ).populate('_user', ['username', 'avatar']);
+      try {
+        const arts = await Article.find(
+          { _user: req.user.id },
+          'title body authorName _user',
+          {
+            sort: {
+              createdAt: Number(sort)
+            },
+            skip: Number(skip),
+            limit: Number(amount)
+          }
+        ).populate('_user', ['username', 'avatar']);
 
-      res.send({ articles: arts });
+        if (!arts) {
+          return res.status(404).send({ msg: "Can not get user's articles" });
+        }
+
+        res.send({ articles: arts });
+      } catch (err) {
+        res.send({ msg: `Server error getting list of user\'s articles` });
+      }
     }
   );
 
@@ -35,27 +43,43 @@ module.exports = app => {
   app.get('/api/articles/:skip/:amount/:sort', async (req, res) => {
     const { skip, amount, sort } = req.params;
 
-    const art = await Article.find({}, 'title body authorName', {
-      sort: {
-        createdAt: Number(sort)
-      },
-      skip: Number(skip),
-      limit: Number(amount)
-    }).populate('_user', ['username', 'avatar']);
+    try {
+      const art = await Article.find({}, 'title body', {
+        sort: {
+          createdAt: Number(sort)
+        },
+        skip: Number(skip),
+        limit: Number(amount)
+      }).populate('_user', ['username', 'avatar']);
 
-    res.send({ articles: art });
+      if (!art) {
+        return res.status(404).send({ msg: 'Can not get articles' });
+      }
+
+      res.send({ articles: art });
+    } catch (err) {
+      res.send({ msg: `Server error getting list of articles` });
+    }
   });
 
   // Find one article by id
   app.get('/api/article/:id', async (req, res) => {
     const { id } = req.params;
 
-    const art = await Article.findById(id).populate('_user', [
-      'username',
-      'avatar'
-    ]);
+    try {
+      const art = await Article.findById(id).populate('_user', [
+        'username',
+        'avatar'
+      ]);
 
-    res.send({ article: art });
+      if (!art) {
+        return res.status(404).send({ msg: 'Article not found' });
+      }
+
+      res.send({ article: art });
+    } catch (err) {
+      res.send({ msg: `Server error getting Article: ${id}` });
+    }
   });
 
   // Post article
@@ -85,22 +109,19 @@ module.exports = app => {
     const { user } = req;
     const { title, body } = req.body;
 
-    const art = await Article.findById(id).populate('_user', [
-      'username',
-      'avatar'
-    ]);
+    try {
+      const art = await Article.findById(id).populate('_user', [
+        'username',
+        'avatar'
+      ]);
 
-    let result = false;
-    if (req.user._id === art._user) {
       art.title = title;
       art.body = body;
 
-      result = await art.save();
-    }
+      await art.save();
 
-    if (result) {
       res.send({ msg: `You edited Article: ${title}` });
-    } else {
+    } catch (err) {
       res.send({ msg: `Error editing Article: ${title}` });
     }
   });
@@ -109,18 +130,77 @@ module.exports = app => {
   app.post('/api/articles/delete/:id', requireLogin, async (req, res) => {
     const { id } = req.params;
 
-    const art = await Article.deleteOne({ _user: req.user.id, _id: id });
+    try {
+      await Article.deleteOne({ _user: req.user.id, _id: id });
 
-    if (art) {
-      res.send({ msg: `You deleted Article` });
-    } else {
+      res.send({
+        msg: `You deleted Article`
+      });
+    } catch (err) {
       res.send({ msg: `Error deleting Article` });
     }
   });
 
   // Like article with id
   app.post('/api/articles/like/:id', requireLogin, async (req, res) => {
-    res.send({ msg: 'You posted comment to article with id' });
+    try {
+      const art = await await Article.findById(req.params.id);
+      // Check if already disliked and remove dislike
+      if (
+        art.dislikes.filter(dislike => dislike.toString() === req.user.id)
+          .length > 0
+      ) {
+        art.dislikes = art.dislikes.filter(
+          dislike => dislike.toString() !== req.user.id
+        );
+
+        await art.save();
+      }
+
+      // Check if already liked
+      if (
+        art.likes.filter(like => like.toString() === req.user.id).length > 0
+      ) {
+        res.send({ success: false, msg: 'You already liked this' });
+      } else {
+        art.likes.unshift(req.user.id);
+        await art.save();
+        res.send({ success: true, msg: 'You liked this' });
+      }
+    } catch (err) {
+      console.log(err);
+      res.status(500).send('Can not like this');
+    }
+  });
+
+  // dislike article with id
+  app.post('/api/articles/dislike/:id', requireLogin, async (req, res) => {
+    try {
+      const art = await await Article.findById(req.params.id);
+
+      // Check if already liked and remove like
+      if (
+        art.likes.filter(like => like.toString() === req.user.id).length > 0
+      ) {
+        art.likes = art.likes.filter(like => like.toString() !== req.user.id);
+
+        await art.save();
+      }
+
+      // Check if already disliked
+      if (
+        art.dislikes.filter(like => like.toString() === req.user.id).length > 0
+      ) {
+        res.send({ success: false, msg: 'You already disliked this' });
+      } else {
+        art.dislikes.unshift(req.user.id);
+        await art.save();
+        res.send({ success: true, msg: 'You disliked this' });
+      }
+    } catch (err) {
+      console.log(err);
+      res.status(500).send('Can not like this');
+    }
   });
 
   // Post comment to article with id
@@ -130,7 +210,11 @@ module.exports = app => {
 
   // Like comment to article with id
   app.post('/api/articles/comment/like/:id', requireLogin, (req, res) => {
-    res.send({ msg: 'You liked comment to article' });
+    try {
+    } catch (err) {
+      console.log(err);
+      res.status(500).send('Cant like this');
+    }
   });
 
   // Unlike comment to article with id

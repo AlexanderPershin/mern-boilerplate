@@ -79,8 +79,35 @@ export const newArticle = article => async dispatch => {
   }
 };
 
+export const likeArticle = id => async dispatch => {
+  const result = await axios.post(`/api/articles/like/${id}`);
+
+  const { success, msg } = result.data;
+
+  if (success) {
+    // dispatch({ type: NEW_ARTICLE, payload: article });
+    alert('like');
+  } else {
+    dispatch(newError(`Liking error: ${msg}`));
+  }
+};
+
+export const dislikeArticle = id => async dispatch => {
+  const result = await axios.post(`/api/articles/dislike/${id}`);
+
+  const { success, msg } = result.data;
+
+  if (success) {
+    // dispatch({ type: NEW_ARTICLE, payload: article });
+    alert('unlike');
+  } else {
+    dispatch(newError(`Unliking error: ${msg}`));
+  }
+};
+
 export const deleteArticle = id => async dispatch => {
   const res = await axios.post(`/api/articles/delete/${id}`);
+
   if (res) {
     dispatch({ type: DELETE_ARTICLE, payload: { id } });
   } else {

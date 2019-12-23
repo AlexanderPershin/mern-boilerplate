@@ -7,9 +7,7 @@ const { Schema, SchemaTypes } = mongoose;
 // Article of Comment model will populate array of likes
 
 const likesSchema = new Schema({
-  _article: { type: SchemaTypes.ObjectId, ref: 'articles' },
-  _comment: { type: SchemaTypes.ObjectId, ref: 'comments' },
-  voter: { type: SchemaTypes.ObjectId, ref: 'users' }
+  voters: [{ type: SchemaTypes.ObjectId, ref: 'users' }]
 });
 
 module.exports = mongoose.model('likes', likesSchema);

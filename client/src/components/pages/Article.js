@@ -1,7 +1,12 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchArticle, clearArticle } from '../../actions/index';
+import {
+  fetchArticle,
+  clearArticle,
+  likeArticle,
+  dislikeArticle
+} from '../../actions/index';
 
 const Article = () => {
   let { id } = useParams();
@@ -24,12 +29,20 @@ const Article = () => {
     return `${month}/${day}/${year}`;
   };
 
-  const renderLikes = likes => {
-    if (likes.length > 0) {
-      return <span>{likes.length} people liked this article</span>;
-    } else {
-      return null;
-    }
+  // const renderLikes = likes => {
+  //   if (likes.length > 0) {
+  //     return <span>{likes.length} people liked this article</span>;
+  //   } else {
+  //     return null;
+  //   }
+  // };
+
+  const handleLike = () => {
+    dispatch(likeArticle(id));
+  };
+
+  const handleUnlike = () => {
+    dispatch(dislikeArticle(id));
   };
 
   return (
@@ -47,7 +60,8 @@ const Article = () => {
             <span>edited: {renderDate(article.updatedAt)}</span>
           )}
           <hr />
-          {renderLikes(article.likes)}
+          <button onClick={handleLike}>Like</button>
+          <button onClick={handleUnlike}>Dislike</button>
         </>
       ) : (
         <span>Loading...</span>

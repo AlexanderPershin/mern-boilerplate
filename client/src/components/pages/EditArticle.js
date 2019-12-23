@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchArticle, clearArticle } from '../../actions/index';
+import { fetchArticle, clearArticle, newError } from '../../actions/index';
 import axios from 'axios';
 
 const EditArticle = () => {
@@ -43,6 +43,10 @@ const EditArticle = () => {
       };
 
       const result = await axios.post(`/api/articles/edit/${id}`, newArticle);
+
+      if (!result) {
+        dispatch(newError('Error editing article'));
+      }
 
       history.push('/dashboard');
     }
