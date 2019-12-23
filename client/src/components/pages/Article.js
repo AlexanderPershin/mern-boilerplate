@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import classnames from 'classnames';
+
 import {
   fetchArticle,
   clearArticle,
@@ -12,6 +14,7 @@ const Article = () => {
   let { id } = useParams();
   const dispatch = useDispatch();
   const article = useSelector(state => state.article);
+  const user = useSelector(state => state.auth);
 
   useEffect(() => {
     dispatch(fetchArticle(id));
@@ -26,42 +29,76 @@ const Article = () => {
     const month = renderingDate.getMonth() + 1;
     const day = renderingDate.getDate();
     const year = renderingDate.getFullYear();
-    return `${month}/${day}/${year}`;
+    return `${day}/${month}/${year}`;
   };
 
-  // const renderLikes = likes => {
-  //   if (likes.length > 0) {
-  //     return <span>{likes.length} people liked this article</span>;
-  //   } else {
-  //     return null;
-  //   }
-  // };
+  const checkLike = () => {
+    if (article && article.likes.filter(item => item === user._id).length > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const checkDislike = () => {
+    if (
+      article &&
+      article.dislikes.filter(item => item === user._id).length > 0
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const likeClasses = classnames('article__like', { '-voted': checkLike() });
+  const dislikeClasses = classnames('article__dislike', {
+    '-voted': checkDislike()
+  });
+
+  const renderLikes = likes => {
+    return (
+      <span onClick={handleLike} className={likeClasses}>
+        {likes && likes.length > 0 ? likes.length : 0} &#128077;
+      </span>
+    );
+  };
+
+  const renderDislikes = dislikes => {
+    return (
+      <span onClick={handleDislike} className={dislikeClasses}>
+        {dislikes && dislikes.length > 0 ? dislikes.length : 0} &#128078;
+      </span>
+    );
+  };
 
   const handleLike = () => {
-    dispatch(likeArticle(id));
+    dispatch(likeArticle(id, user._id));
   };
 
-  const handleUnlike = () => {
-    dispatch(dislikeArticle(id));
+  const handleDislike = () => {
+    dispatch(dislikeArticle(id, user._id));
   };
 
   return (
     <div className='article'>
       {article ? (
         <>
-          <h1>{article.title}</h1>
-          <p>{article.body}</p>
-          <i>{article.authorName}</i>
+          <h1 className='article__title'>{article.title}</h1>
+          <p className='article__body'>{article.body}</p>
+          <i className='article__author'>--{article._user.username}</i>
           <hr />
-          <span>published: {renderDate(article.createdAt)}</span>
-          <br />
-          {renderDate(article.createdAt) ===
-          renderDate(article.updatedAt) ? null : (
-            <span>edited: {renderDate(article.updatedAt)}</span>
-          )}
+          <span className='article__published'>
+            published: {renderDate(article.createdAt)}
+          </span>
+          <span className='article__updated'>
+            updated: {renderDate(article.updatedAt)}
+          </span>
           <hr />
-          <button onClick={handleLike}>Like</button>
-          <button onClick={handleUnlike}>Dislike</button>
+          <div className='article__voteControls'>
+            {renderLikes(article.likes)}
+            {renderDislikes(article.dislikes)}
+          </div>
         </>
       ) : (
         <span>Loading...</span>

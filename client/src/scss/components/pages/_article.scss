@@ -1,0 +1,39 @@
+.article {
+  .article__title {
+  }
+  .article__body {
+  }
+  .article__author {
+  }
+  .article__published {
+  }
+  .article__updated {
+  }
+  .article__voteControls {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    .article__like,
+    .article__dislike {
+      flex: 0 1 10rem;
+      cursor: pointer;
+      background-color: transparent;
+      border: 0.2rem solid transparent;
+      padding: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      transition: all 0.3s ease-in-out;
+    }
+    .-voted {
+      background-color: $item-bg;
+      color: $app-c-dark;
+      border: 0.2rem solid $app-c-dark;
+    }
+    .article__like {
+    }
+    .article__dislike {
+    }
+  }
+}

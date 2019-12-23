@@ -103,12 +103,16 @@ const Profile = () => {
   };
 
   const handleDeleteAccount = async () => {
-    const result = await axios.delete('/api/profiles');
+    if (
+      window.confirm(
+        'Are you sure you want to delete your account? Operation is irreversible!'
+      )
+    ) {
+      const result = await axios.delete('/api/profiles');
 
-    if (result) {
-      console.log(result);
-
-      console.log('Account deleted');
+      if (result) {
+        alert('Account deleted');
+      }
     }
   };
 
@@ -130,7 +134,9 @@ const Profile = () => {
         <button type='submit'>Confirm</button>
       </form>
 
-      <button onClick={handleDeleteAccount}>Delete My Account</button>
+      <button className='profile__deleteAccount' onClick={handleDeleteAccount}>
+        Delete My Account
+      </button>
     </div>
   );
 };

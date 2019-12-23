@@ -10,7 +10,9 @@ import {
   CLEAR_ARTICLE,
   NEW_ERROR,
   DELETE_ERROR,
-  CLEAR_ERRORS
+  CLEAR_ERRORS,
+  LIKE_ARTICLE,
+  DISLIKE_ARTICLE
 } from './types';
 
 export const fetchUser = () => async dispatch => {
@@ -79,27 +81,25 @@ export const newArticle = article => async dispatch => {
   }
 };
 
-export const likeArticle = id => async dispatch => {
+export const likeArticle = (id, userId) => async dispatch => {
   const result = await axios.post(`/api/articles/like/${id}`);
 
   const { success, msg } = result.data;
 
   if (success) {
-    // dispatch({ type: NEW_ARTICLE, payload: article });
-    alert('like');
+    dispatch({ type: LIKE_ARTICLE, payload: { id, userId } });
   } else {
     dispatch(newError(`Liking error: ${msg}`));
   }
 };
 
-export const dislikeArticle = id => async dispatch => {
+export const dislikeArticle = (id, userId) => async dispatch => {
   const result = await axios.post(`/api/articles/dislike/${id}`);
 
   const { success, msg } = result.data;
 
   if (success) {
-    // dispatch({ type: NEW_ARTICLE, payload: article });
-    alert('unlike');
+    dispatch({ type: DISLIKE_ARTICLE, payload: { id, userId } });
   } else {
     dispatch(newError(`Unliking error: ${msg}`));
   }

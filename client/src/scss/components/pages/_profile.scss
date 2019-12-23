@@ -57,4 +57,13 @@
       box-shadow: $sh;
     }
   }
+
+  .profile__deleteAccount {
+    margin-top: 7rem;
+    color: red;
+    font-size: 2rem;
+    padding: 1rem 3rem;
+    cursor: pointer;
+    box-shadow: $sh;
+  }
 }
