@@ -36,4 +36,18 @@
     .article__dislike {
     }
   }
+  .article__commentForm {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    flex-direction: column;
+    > textarea {
+      font-size: 1.5rem;
+    }
+    > button {
+      font-size: 2rem;
+      padding: 1rem 3rem;
+      cursor: pointer;
+    }
+  }
 }

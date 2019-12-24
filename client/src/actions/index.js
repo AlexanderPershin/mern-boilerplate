@@ -12,7 +12,10 @@ import {
   DELETE_ERROR,
   CLEAR_ERRORS,
   LIKE_ARTICLE,
-  DISLIKE_ARTICLE
+  DISLIKE_ARTICLE,
+  COMMENT_ARTICLE,
+  EDIT_COMMENT,
+  DELETE_COMMENT
 } from './types';
 
 export const fetchUser = () => async dispatch => {
@@ -144,4 +147,33 @@ export const clearErrors = () => {
   return {
     type: CLEAR_ERRORS
   };
+};
+
+export const commentArticle = (id, user, text) => async dispatch => {
+  const result = await axios.post(`/api/articles/comment/${id}`, {
+    body: text
+  });
+
+  const { success, msg, _id } = result.data;
+
+  if (success) {
+    dispatch({ type: COMMENT_ARTICLE, payload: { user, body: text, _id } });
+  } else {
+    dispatch(newError(`Server error commenting article`));
+  }
+};
+
+export const deleteCommentArticle = (id, comment_id) => async dispatch => {
+  const result = await axios.delete(
+    `/api/articles/comment/${id}/${comment_id}`
+  );
+  console.log('TCL: result', result.data);
+
+  const { success, msg, comments } = result.data;
+
+  if (success) {
+    dispatch({ type: DELETE_COMMENT, payload: comments });
+  } else {
+    dispatch(newError(`Server error commenting article ${msg}`));
+  }
 };

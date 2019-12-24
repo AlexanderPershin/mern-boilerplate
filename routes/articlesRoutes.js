@@ -67,10 +67,9 @@ module.exports = app => {
     const { id } = req.params;
 
     try {
-      const art = await Article.findById(id).populate('_user', [
-        'username',
-        'avatar'
-      ]);
+      const art = await Article.findById(id)
+        .populate('_user', ['username', 'avatar'])
+        .populate('comments.user', ['username', 'avatar']);
 
       if (!art) {
         return res.status(404).send({ msg: 'Article not found' });
@@ -204,21 +203,89 @@ module.exports = app => {
   });
 
   // Post comment to article with id
-  app.post('/api/articles/comment/:id', requireLogin, (req, res) => {
-    res.send({ msg: 'You posted comment to article' });
-  });
-
-  // Like comment to article with id
-  app.post('/api/articles/comment/like/:id', requireLogin, (req, res) => {
+  app.post('/api/articles/comment/:id', requireLogin, async (req, res) => {
     try {
+      const art = await Article.findById(req.params.id);
+
+      const newComment = {
+        user: req.user.id,
+        body: req.body.body
+      };
+
+      art.comments.unshift(newComment);
+      await art.save();
+      res.send({
+        success: true,
+        msg: 'You successfuly posted a comment',
+        _id: art.comments[0]._id
+      });
     } catch (err) {
-      console.log(err);
-      res.status(500).send('Cant like this');
+      console.log(err.message);
+      res.send({ success: false, msg: 'Error posting a comment' });
     }
   });
 
-  // Unlike comment to article with id
-  app.post('/api/articles/comment/unlike/:id', requireLogin, (req, res) => {
-    res.send({ msg: 'You unliked comment to article' });
-  });
+  // Delete comment with comment_id to article with id
+  app.delete(
+    '/api/articles/comment/:id/:comment_id',
+    requireLogin,
+    async (req, res) => {
+      try {
+        const art = await Article.findById(req.params.id);
+
+        // Find comment
+        const comment = art.comments.find(
+          comm => comm.id === req.params.comment_id
+        );
+
+        // Check if there is something to delete
+        if (!comment) {
+          return res.send({ success: false, msg: 'There is no such comment' });
+        }
+
+        // Check user rights to delete this comment
+        if (comment.user.toString() !== req.user.id) {
+          // User has no right to delete comment
+          return res.send({
+            success: false,
+            msg: 'You can not delete this comment'
+          });
+        }
+
+        const removeIndex = art.comments
+          .map(comm => comm.id.toString())
+          .indexOf(req.params.comment_id);
+
+        art.comments.splice(removeIndex, 1);
+
+        await art.save();
+
+        res.send({
+          success: true,
+          msg: 'You successfuly deleted a comment',
+          comments: art.comments
+        });
+      } catch (err) {
+        console.log(err.message);
+        res.send({ success: false, msg: 'Error posting a comment' });
+      }
+    }
+  );
+
+  // TODO: add likes/dislikes arrays to comments
+  // Redo comment system to avoid overflow highwatermark
+  // of 16 mb
+  // // Like comment to article with id
+  // app.post('/api/articles/comment/like/:id', requireLogin, (req, res) => {
+  //   try {
+  //   } catch (err) {
+  //     console.log(err);
+  //     res.status(500).send('Cant like this');
+  //   }
+  // });
+
+  // // Unlike comment to article with id
+  // app.post('/api/articles/comment/unlike/:id', requireLogin, (req, res) => {
+  //   res.send({ msg: 'You unliked comment to article' });
+  // });
 };

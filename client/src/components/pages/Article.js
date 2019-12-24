@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import classnames from 'classnames';
@@ -7,7 +7,9 @@ import {
   fetchArticle,
   clearArticle,
   likeArticle,
-  dislikeArticle
+  dislikeArticle,
+  commentArticle,
+  deleteCommentArticle
 } from '../../actions/index';
 
 const Article = () => {
@@ -15,6 +17,8 @@ const Article = () => {
   const dispatch = useDispatch();
   const article = useSelector(state => state.article);
   const user = useSelector(state => state.auth);
+
+  const [comment, setComment] = useState('');
 
   useEffect(() => {
     dispatch(fetchArticle(id));
@@ -72,12 +76,47 @@ const Article = () => {
     );
   };
 
+  const handleDeleteComment = (id, comment_id) => {
+    dispatch(deleteCommentArticle(id, comment_id));
+  };
+
+  const renderComments = comments => {
+    if (comments && comments.length > 0) {
+      return comments.map(item => (
+        <div key={item._id}>
+          <p>{item.body}</p>
+          <i>{item.user.username}</i>
+          <span>{item.date}</span>
+          {item.user._id === user._id ? (
+            <button onClick={e => handleDeleteComment(id, item._id)}>
+              Delete
+            </button>
+          ) : null}
+        </div>
+      ));
+    }
+  };
+
   const handleLike = () => {
     dispatch(likeArticle(id, user._id));
   };
 
   const handleDislike = () => {
     dispatch(dislikeArticle(id, user._id));
+  };
+
+  const handleComment = e => {
+    setComment(e.target.value);
+  };
+
+  const handleAddComment = e => {
+    e.preventDefault();
+    if (comment) {
+      dispatch(commentArticle(id, user, comment));
+      setComment('');
+    } else {
+      return;
+    }
   };
 
   return (
@@ -99,6 +138,22 @@ const Article = () => {
             {renderLikes(article.likes)}
             {renderDislikes(article.dislikes)}
           </div>
+          <div>{renderComments(article.comments)}</div>
+          {user && (
+            <form onSubmit={handleAddComment} className='article__commentForm'>
+              <h2>Add a comment</h2>
+              <textarea
+                name='message_body'
+                id='message_body'
+                cols='30'
+                rows='10'
+                placeholder='Enter your comment'
+                value={comment}
+                onChange={handleComment}
+              ></textarea>
+              <button type='submit'>Send</button>
+            </form>
+          )}
         </>
       ) : (
         <span>Loading...</span>
