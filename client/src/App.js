@@ -14,6 +14,7 @@ import Article from './components/pages/Article';
 import NewArticle from './components/pages/NewArticle';
 import EditArticle from './components/pages/EditArticle';
 import Profile from './components/pages/Profile';
+import ProfilesList from './components/pages/ProfilesList';
 // Private route hoc
 import PrivateRoute from './components/hoc/PrivateRoute';
 
@@ -43,6 +44,7 @@ const App = () => {
               component={EditArticle}
             />
             <PrivateRoute exact path='/profile' component={Profile} />
+            <Route exact path='/profiles' component={ProfilesList} />
           </Switch>
         </Layout>
       </div>

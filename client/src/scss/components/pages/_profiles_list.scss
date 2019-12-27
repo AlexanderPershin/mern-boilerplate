@@ -1,0 +1,28 @@
+.profilesList {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  .profilesList__item {
+    min-width: 40rem;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: $item-bg;
+    border-radius: 100rem;
+    padding: 1rem;
+    box-shadow: $sh;
+    margin: 2rem 0;
+    img {
+      width: 10rem;
+      height: 10rem;
+      border-radius: 100rem;
+      box-shadow: $sh;
+    }
+    figcaption {
+      padding: 2rem;
+      color: $heading-c;
+      text-shadow: $tsh;
+    }
+  }
+}

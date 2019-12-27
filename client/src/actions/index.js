@@ -17,7 +17,8 @@ import {
   REMOVE_ALERT,
   SET_PROFILE,
   DELETE_PROFILE,
-  UPDATE_PROFILE
+  UPDATE_PROFILE,
+  SET_PROFILES
 } from './types';
 
 export const fetchUser = () => async dispatch => {
@@ -229,4 +230,11 @@ export const deleteAlert = id => dispatch => {
     type: REMOVE_ALERT,
     payload: id
   });
+};
+
+export const getProfiles = () => async dispatch => {
+  const result = await axios.get('/api/profiles/all');
+  if (result.data && result.data.length > 0) {
+    dispatch({ type: SET_PROFILES, payload: result.data });
+  }
 };

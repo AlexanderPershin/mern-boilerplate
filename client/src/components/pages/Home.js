@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector, connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { fetchArticles } from '../../actions/index';
 // import axios from 'axios';
 
@@ -12,6 +13,9 @@ const Home = () => {
   return (
     <div className='home'>
       <h1>Wellcome to our website</h1>
+      <Link className='home__profiles' to='/profiles'>
+        View all authors
+      </Link>
       <h2>Latest articles:</h2>
       <ArticleList
         keyprop='home_articles'

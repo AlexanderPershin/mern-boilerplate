@@ -1,0 +1,10 @@
+.home {
+  .home__profiles {
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: $link-c;
+    text-shadow: $tsh;
+  }
+}

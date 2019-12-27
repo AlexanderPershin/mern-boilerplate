@@ -39,10 +39,12 @@ const Profile = () => {
 
   const renderNameAndPhoto = () => {
     if (user) {
+      const { username, avatar } = user;
+
       return (
         <figure className='userInfo'>
-          <img src={user.avatar} />
-          <figcaption>{user.username}</figcaption>
+          <img src={avatar} />
+          <figcaption>{username}</figcaption>
         </figure>
       );
     } else {
