@@ -4,12 +4,16 @@ import authReducer from './authReducer';
 import articlesReducer from './articlesReducer';
 import currentArticlesReducer from './currentArticlesReducer';
 import articleReducer from './articleReducer';
-import errorReducer from './errorReducer';
+import alertReducer from './alertReducer';
+import profileReducer from './profileReducer';
+import profilesReducer from './profilesReducer';
 
 export default combineReducers({
   auth: authReducer,
   articles: articlesReducer,
   currentArticles: currentArticlesReducer,
   article: articleReducer,
-  errors: errorReducer
+  alerts: alertReducer,
+  profile: profileReducer,
+  profiles: profilesReducer
 });

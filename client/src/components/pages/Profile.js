@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 
+import { deleteProfile, updateProfile } from '../../actions';
+
 const Profile = () => {
+  const dispatch = useDispatch();
   const user = useSelector(state => state.auth);
+  const profile = useSelector(state => state.profile);
   const [profileData, setProfileData] = useState({
     company: '',
     website: '',
@@ -18,6 +22,20 @@ const Profile = () => {
     linkeding: '',
     instagram: ''
   });
+
+  useEffect(() => {
+    // update profile
+    if (profile) {
+      const { company, website, location, bio, social } = profile;
+      setProfileData(prev => ({
+        company,
+        website,
+        location,
+        bio
+      }));
+      setSicialData(social);
+    }
+  }, [profile]);
 
   const renderNameAndPhoto = () => {
     if (user) {
@@ -55,15 +73,7 @@ const Profile = () => {
   const handlePostProfile = async e => {
     e.preventDefault();
 
-    // TODO: make an action creator for updating profile
-    // and deleting account
-
-    const response = await axios.post('/api/profiles/current', {
-      ...profileData,
-      socials: { ...socialData }
-    });
-
-    // TODO: Clear form
+    dispatch(updateProfile(profileData, socialData));
   };
 
   const renderFormFields = () => {
@@ -103,17 +113,7 @@ const Profile = () => {
   };
 
   const handleDeleteAccount = async () => {
-    if (
-      window.confirm(
-        'Are you sure you want to delete your account? Operation is irreversible!'
-      )
-    ) {
-      const result = await axios.delete('/api/profiles');
-
-      if (result) {
-        alert('Account deleted');
-      }
-    }
+    dispatch(deleteProfile());
   };
 
   return (

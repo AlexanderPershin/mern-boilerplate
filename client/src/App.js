@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { fetchUser } from './actions';
+import { fetchUser, getProfile } from './actions';
 
-// Layout. Contains header content and footer
+// Layout. Contains header, content and footer
 import Layout from './components/hoc/Layout';
 // Actual pages components
 import Home from './components/pages/Home';
@@ -14,6 +14,8 @@ import Article from './components/pages/Article';
 import NewArticle from './components/pages/NewArticle';
 import EditArticle from './components/pages/EditArticle';
 import Profile from './components/pages/Profile';
+// Private route hoc
+import PrivateRoute from './components/hoc/PrivateRoute';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -21,6 +23,7 @@ const App = () => {
   useEffect(() => {
     // Check if user is logged in and write to redux store
     dispatch(fetchUser());
+    dispatch(getProfile());
   }, []);
 
   return (
@@ -31,11 +34,15 @@ const App = () => {
             <Route exact path='/' component={Home} />
             <Route exact path='/about' component={About} />
             <Route exact path='/contact' component={Contact} />
-            <Route exact path='/dashboard' component={Dashboard} />
+            <PrivateRoute exact path='/dashboard' component={Dashboard} />
             <Route exact path='/article/:id' component={Article} />
-            <Route exact path='/new/article/' component={NewArticle} />
-            <Route exact path='/edit/article/:id' component={EditArticle} />
-            <Route exact path='/profile' component={Profile} />
+            <PrivateRoute exact path='/new/article/' component={NewArticle} />
+            <PrivateRoute
+              exact
+              path='/edit/article/:id'
+              component={EditArticle}
+            />
+            <PrivateRoute exact path='/profile' component={Profile} />
           </Switch>
         </Layout>
       </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchArticle, clearArticle, newError } from '../../actions/index';
+import { fetchArticle, clearArticle, setAlert } from '../../actions/index';
 import axios from 'axios';
 
 const EditArticle = () => {
@@ -13,6 +13,7 @@ const EditArticle = () => {
 
   const dispatch = useDispatch();
   const article = useSelector(state => state.article);
+  const alerts = useSelector(state => state.alerts);
 
   useEffect(() => {
     dispatch(fetchArticle(id));
@@ -45,7 +46,12 @@ const EditArticle = () => {
       const result = await axios.post(`/api/articles/edit/${id}`, newArticle);
 
       if (!result) {
-        dispatch(newError('Error editing article'));
+        // TODO: set error alert here
+        dispatch(setAlert(`Error editing article ${article.title}`, 'danger'));
+      } else {
+        dispatch(
+          setAlert(`You are successfuly edited ${article.title}`, 'success')
+        );
       }
 
       history.push('/dashboard');

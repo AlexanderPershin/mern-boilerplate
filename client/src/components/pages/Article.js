@@ -12,6 +12,8 @@ import {
   deleteCommentArticle
 } from '../../actions/index';
 
+import Loading from '../parts/Loading';
+
 const Article = () => {
   let { id } = useParams();
   const dispatch = useDispatch();
@@ -37,7 +39,11 @@ const Article = () => {
   };
 
   const checkLike = () => {
-    if (article && article.likes.filter(item => item === user._id).length > 0) {
+    if (
+      user &&
+      article &&
+      article.likes.filter(item => item === user._id).length > 0
+    ) {
       return true;
     } else {
       return false;
@@ -46,6 +52,7 @@ const Article = () => {
 
   const checkDislike = () => {
     if (
+      user &&
       article &&
       article.dislikes.filter(item => item === user._id).length > 0
     ) {
@@ -156,7 +163,7 @@ const Article = () => {
           )}
         </>
       ) : (
-        <span>Loading...</span>
+        <Loading />
       )}
     </div>
   );

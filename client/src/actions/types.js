@@ -1,4 +1,10 @@
 export const FETCH_USER = 'FETCH_USER';
+// Profile
+export const SET_PROFILE = 'SET_PROFILE';
+export const UPDATE_PROFILE = 'UPDATE_PROFILE';
+export const DELETE_PROFILE = 'DELETE_PROFILE';
+// Users' profiles
+export const SET_PROFILES = 'SET_PROFILES';
 // Articles
 export const FETCH_ARTICLES = 'FETCH_ARTICLES';
 export const FETCH_CURRENT_ARTICLES = 'FETCH_CURRENT_ARTICLES';
@@ -14,7 +20,6 @@ export const COMMENT_ARTICLE = 'COMMENT_ARTICLE';
 export const EDIT_COMMENT = 'EDIT_COMMENT';
 export const DELETE_COMMENT = 'DELETE_COMMENT';
 
-// Errors
-export const NEW_ERROR = 'NEW_ERROR';
-export const DELETE_ERROR = 'DELETE_ERROR';
-export const CLEAR_ERRORS = 'CLEAR_ERRORS';
+// Alerts
+export const SET_ALERT = 'SET_ALERT';
+export const REMOVE_ALERT = 'REMOVE_ALERT';

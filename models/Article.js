@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const { Schema, SchemaTypes } = mongoose;
 
+// TODO: Make separate comment model to store comments
 const articleSchema = new Schema(
   {
     title: { type: String, required: true },

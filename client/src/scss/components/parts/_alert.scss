@@ -1,0 +1,44 @@
+.alert {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+  max-width: 120rem;
+  width: 100%;
+  height: 10rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  z-index: 100;
+}
+.alert__item {
+  border: 1px solid gray;
+  width: 100%;
+  padding: 2rem;
+  position: relative;
+  .alert__remove {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 1rem 1rem;
+    cursor: pointer;
+    font-size: 3rem;
+    &:hover {
+      color: red;
+      text-shadow: $tsh;
+    }
+    &:active {
+      color: darkred;
+    }
+  }
+}
+.-danger {
+  background-color: rgba(255, 0, 0, 0.5);
+}
+.-success {
+  background-color: rgba(0, 255, 0, 0.5);
+}
+.-warning {
+  background-color: rgba(232, 126, 4, 0.5);
+}

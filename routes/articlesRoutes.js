@@ -109,17 +109,23 @@ module.exports = app => {
     const { title, body } = req.body;
 
     try {
-      const art = await Article.findById(id).populate('_user', [
+      const art = await Article.findOne(id).populate('_user', [
         'username',
         'avatar'
       ]);
 
-      art.title = title;
-      art.body = body;
+      if (art._user.id === user.id) {
+        art.title = title;
+        art.body = body;
+        await art.save();
 
-      await art.save();
-
-      res.send({ msg: `You edited Article: ${title}` });
+        res.send({ success: true, msg: `You edited Article: ${title}` });
+      } else {
+        res.send({
+          success: false,
+          msg: `You are not authorized to edit Article: ${title}`
+        });
+      }
     } catch (err) {
       res.send({ msg: `Error editing Article: ${title}` });
     }

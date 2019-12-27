@@ -16,14 +16,14 @@ module.exports = app => {
       // Find profile of current user and add(populate) user's data from users collection
       const profile = await Profile.findOne({
         user: currentUser._id
-      }).populate('user', ['username', 'avatar']);
+      });
 
       if (!profile) {
         return res
           .status(400)
-          .json({ msg: 'There is no profile for this user' });
+          .json({ success: false, msg: 'There is no profile for this user' });
       } else {
-        res.json(profile);
+        res.json({ success: true, profile });
       }
     } catch (err) {
       console.log(err.message);
@@ -57,7 +57,7 @@ module.exports = app => {
           { new: true }
         );
 
-        return res.json(profile);
+        return res.json({ success: true, profile });
       } else {
         // Profile does not exists
         // Create new one
@@ -65,12 +65,12 @@ module.exports = app => {
 
         await profile.save();
 
-        res.json(profile);
+        res.json({ success: true, profile });
       }
     } catch (err) {
       // Server error
       console.log(err.message);
-      res.status(500).send('Profile post error');
+      res.status(500).send({ success: false, msg: 'Profile post error' });
     }
   });
 

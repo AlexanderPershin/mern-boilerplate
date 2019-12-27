@@ -8,14 +8,16 @@ import {
   NEW_ARTICLE,
   DELETE_ARTICLE,
   CLEAR_ARTICLE,
-  NEW_ERROR,
-  DELETE_ERROR,
-  CLEAR_ERRORS,
   LIKE_ARTICLE,
   DISLIKE_ARTICLE,
   COMMENT_ARTICLE,
   EDIT_COMMENT,
-  DELETE_COMMENT
+  DELETE_COMMENT,
+  SET_ALERT,
+  REMOVE_ALERT,
+  SET_PROFILE,
+  DELETE_PROFILE,
+  UPDATE_PROFILE
 } from './types';
 
 export const fetchUser = () => async dispatch => {
@@ -27,7 +29,51 @@ export const fetchUser = () => async dispatch => {
   }
 };
 
+export const getProfile = () => async dispatch => {
+  const profile = await axios.get('/api/profiles/current');
+
+  if (profile.data.success) {
+    dispatch({
+      type: SET_PROFILE,
+      payload: profile.data.profile
+    });
+  }
+};
+
+export const updateProfile = (profileData, socialData) => async dispatch => {
+  const response = await axios.post('/api/profiles/current', {
+    ...profileData,
+    socials: { ...socialData }
+  });
+
+  if (response.data.success) {
+    const updatedProfile = response.data.profile;
+    dispatch({
+      type: UPDATE_PROFILE,
+      payload: updatedProfile
+    });
+  }
+};
+
+export const deleteProfile = () => async dispatch => {
+  if (
+    window.confirm(
+      'Are you sure you want to delete your account? Operation is irreversible!'
+    )
+  ) {
+    const response = await axios.delete('/api/profiles');
+
+    if (response.data.success) {
+      setAlert('Profile deleted', 'successs', 5000);
+    } else {
+      setAlert('Error deleting profile', 'danger', 5000);
+    }
+  }
+};
+
 export const fetchArticles = (skip, amount, sort = -1) => async dispatch => {
+  // TODO: refactor code to request only absent articles
+  // and add them in the reducer to previously loaded articles
   // '/api/articles/:skip/:amount/:sort'
   const result = await axios.get(`/api/articles/${skip}/${amount}/${sort}`);
 
@@ -36,7 +82,7 @@ export const fetchArticles = (skip, amount, sort = -1) => async dispatch => {
   } else {
     dispatch({ type: FETCH_ARTICLES, payload: [] });
 
-    dispatch(newError(`Error fetching articles!`));
+    dispatch(dispatch(setAlert('Error fetching articles', 'warning', 5000)));
   }
 };
 
@@ -56,7 +102,7 @@ export const fetchCurrentArticles = (skip, amount, sort) => async dispatch => {
   } else {
     dispatch({ type: FETCH_CURRENT_ARTICLES, payload: [] });
 
-    dispatch(newError(`Error fetching articles of a current user!`));
+    dispatch(setAlert(`Error fetching articles of a current user!`, 'warning'));
   }
 };
 
@@ -68,7 +114,7 @@ export const fetchArticle = id => async dispatch => {
   } else {
     dispatch({ type: FETCH_ARTICLE, payload: null });
 
-    dispatch(newError(`Error fetching article!`));
+    dispatch(setAlert(`Error fetching article!`, 'warning'));
   }
 };
 
@@ -79,8 +125,9 @@ export const newArticle = article => async dispatch => {
 
   if (success) {
     dispatch({ type: NEW_ARTICLE, payload: article });
+    dispatch(setAlert(`You've posted an article`, 'success', 2000));
   } else {
-    dispatch(newError(`Error creating article! Message: ${msg}`));
+    dispatch(setAlert(`Error creating article! Message: ${msg}`, 'warning'));
   }
 };
 
@@ -91,8 +138,9 @@ export const likeArticle = (id, userId) => async dispatch => {
 
   if (success) {
     dispatch({ type: LIKE_ARTICLE, payload: { id, userId } });
+    dispatch(setAlert(`Like accepted`, 'success', 1000));
   } else {
-    dispatch(newError(`Liking error: ${msg}`));
+    dispatch(setAlert(`Liking error: ${msg}`, 'warning'));
   }
 };
 
@@ -103,8 +151,9 @@ export const dislikeArticle = (id, userId) => async dispatch => {
 
   if (success) {
     dispatch({ type: DISLIKE_ARTICLE, payload: { id, userId } });
+    dispatch(setAlert(`Dislike accepted`, 'success', 1000));
   } else {
-    dispatch(newError(`Unliking error: ${msg}`));
+    dispatch(setAlert(`Disliking error: ${msg}`, 'warning'));
   }
 };
 
@@ -113,39 +162,15 @@ export const deleteArticle = id => async dispatch => {
 
   if (res) {
     dispatch({ type: DELETE_ARTICLE, payload: { id } });
+    dispatch(setAlert(`You've deleted an article`, 'success', 2000));
   } else {
-    dispatch(newError(`Error deleting article!`));
+    dispatch(setAlert(`Error deleting article!`, 'warning'));
   }
 };
 
 export const clearArticle = () => {
   return {
     type: CLEAR_ARTICLE
-  };
-};
-
-export const newError = msg => {
-  return {
-    type: NEW_ERROR,
-    payload: {
-      errorId: uuidv1(),
-      message: msg
-    }
-  };
-};
-
-export const deleteError = errorId => {
-  return {
-    type: DELETE_ERROR,
-    payload: {
-      errorId
-    }
-  };
-};
-
-export const clearErrors = () => {
-  return {
-    type: CLEAR_ERRORS
   };
 };
 
@@ -159,7 +184,7 @@ export const commentArticle = (id, user, text) => async dispatch => {
   if (success) {
     dispatch({ type: COMMENT_ARTICLE, payload: { user, body: text, _id } });
   } else {
-    dispatch(newError(`Server error commenting article`));
+    dispatch(setAlert(`Server error commenting article`, 'warning'));
   }
 };
 
@@ -174,6 +199,34 @@ export const deleteCommentArticle = (id, comment_id) => async dispatch => {
   if (success) {
     dispatch({ type: DELETE_COMMENT, payload: comments });
   } else {
-    dispatch(newError(`Server error commenting article ${msg}`));
+    dispatch(setAlert(`Server error commenting article ${msg}`, 'warning'));
   }
+};
+
+export const setAlert = (msg, alertType, timeout = 5000) => dispatch => {
+  const id = uuidv1();
+
+  dispatch({
+    type: SET_ALERT,
+    payload: {
+      id,
+      msg,
+      alertType
+    }
+  });
+
+  // Set alert timeout to infinite to constantly show alert
+  // until user will press cross button
+  if (timeout !== 'infinite') {
+    setTimeout(() => {
+      dispatch({ type: REMOVE_ALERT, payload: id });
+    }, timeout);
+  }
+};
+
+export const deleteAlert = id => dispatch => {
+  dispatch({
+    type: REMOVE_ALERT,
+    payload: id
+  });
 };

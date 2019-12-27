@@ -10,6 +10,7 @@
   margin: 5rem auto;
   list-style: none;
   .article__item {
+    min-width: 45rem;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
