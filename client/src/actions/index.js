@@ -18,7 +18,9 @@ import {
   SET_PROFILE,
   DELETE_PROFILE,
   UPDATE_PROFILE,
-  SET_PROFILES
+  SET_PROFILES,
+  LOADMORE_ARTICLES,
+  LOADMORE_CURRENT_ARTICLES
 } from './types';
 
 export const fetchUser = () => async dispatch => {
@@ -87,6 +89,22 @@ export const fetchArticles = (skip, amount, sort = -1) => async dispatch => {
   }
 };
 
+export const loadMoreArticles = (skip, amount, sort = -1) => async dispatch => {
+  const result = await axios.get(`/api/articles/${skip}/${amount}/${sort}`);
+
+  if (
+    result.data.articles &&
+    result.data.articles.length &&
+    result.data.articles.length > 0
+  ) {
+    dispatch({ type: LOADMORE_ARTICLES, payload: result.data.articles });
+  } else {
+    dispatch({ type: LOADMORE_ARTICLES, payload: [] });
+
+    dispatch(setAlert('There is no more articles', 'warning', 2000));
+  }
+};
+
 export const fetchCurrentArticles = (skip, amount, sort) => async dispatch => {
   // '/api/articles/:skip/:amount/:sort'
   // sort = -1 - last published articles, sort = 1 - oldest articles
@@ -104,6 +122,31 @@ export const fetchCurrentArticles = (skip, amount, sort) => async dispatch => {
     dispatch({ type: FETCH_CURRENT_ARTICLES, payload: [] });
 
     dispatch(setAlert(`Error fetching articles of a current user!`, 'warning'));
+  }
+};
+
+export const loadMoreCurrentArticles = (
+  skip,
+  amount,
+  sort = -1
+) => async dispatch => {
+  const result = await axios.get(
+    `/api/current_articles/${skip}/${amount}/${sort}`
+  );
+
+  if (
+    result.data.articles &&
+    result.data.articles.length &&
+    result.data.articles.length > 0
+  ) {
+    dispatch({
+      type: LOADMORE_CURRENT_ARTICLES,
+      payload: result.data.articles
+    });
+  } else {
+    dispatch({ type: LOADMORE_CURRENT_ARTICLES, payload: [] });
+
+    dispatch(setAlert('There is no more articles', 'warning', 2000));
   }
 };
 

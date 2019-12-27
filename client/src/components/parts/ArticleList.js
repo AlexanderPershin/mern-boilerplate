@@ -12,9 +12,11 @@ const ArticleList = ({
   loadmore,
   selector,
   fetcher,
+  moreLoader,
   editable = false
 }) => {
   const list = selector;
+  const dispatch = useDispatch();
 
   const [loadMoreTimes, setLoadMoreTimes] = useState(loadmore);
 
@@ -25,9 +27,10 @@ const ArticleList = ({
   const loadMoreItems = () => {
     setLoadMoreTimes(prev => prev + loadmore);
 
-    const newAmount = startingAmount + loadMoreTimes;
+    // const newAmount = startingAmount + loadMoreTimes;
 
-    fetcher(0, newAmount, -1);
+    // fetcher(0, newAmount, -1);
+    dispatch(moreLoader(list.length, loadmore));
   };
 
   const renderArticles = () => {

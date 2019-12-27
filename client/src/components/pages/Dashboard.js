@@ -2,7 +2,10 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCurrentArticles } from '../../actions/index';
+import {
+  fetchCurrentArticles,
+  loadMoreCurrentArticles
+} from '../../actions/index';
 
 import ArticleList from '../parts/ArticleList';
 
@@ -34,6 +37,7 @@ const Dashboard = () => {
         keyprop='current_articles'
         startingAmount={2}
         loadmore={2}
+        moreLoader={loadMoreCurrentArticles}
         selector={useSelector(state => state.currentArticles)}
         fetcher={(skip, amount, sort) =>
           dispatch(fetchCurrentArticles(skip, amount, sort))
