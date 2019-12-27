@@ -12,3 +12,5 @@
 4. Create heroku app and add environment variables with names from prod.js file in config folder
 5. Commit all changes using git and run `git push heroku master`
 6. Open your application with `heroku open` command
+
+## Demo [I'm an inline-style link](https://limitless-sierra-27830.herokuapp.com/)
